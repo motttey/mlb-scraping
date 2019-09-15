@@ -41,6 +41,7 @@ def get_batter_statistics(url, date_list):
 	name = soup.find('div', {'id' :'info'}).find('h1').text
 	print(name.encode("utf-8"))
 
+	result_object = {}
 	# "試合数", "打席", "単打", "二塁打", "三塁打", "本塁打", "打点", "盗塁", "盗塁刺", "犠打", "犠飛", "四球", "死球", "三振", "併殺打"
 
 	game = 0
@@ -59,6 +60,8 @@ def get_batter_statistics(url, date_list):
 	SO = 0
 	GDP = 0
 
+	if len(soup.find_all('table', {'id' :'batting_gamelogs'})) == 0: return;
+
 	table_body = soup.find_all('table', {'id' :'batting_gamelogs'})[0].find('tbody')
 	tr_list = table_body.find_all('tr')
 
@@ -66,61 +69,112 @@ def get_batter_statistics(url, date_list):
 		for tr in tr_list:
 			td_list = tr.find_all('td')
 			for td in td_list:
-				if td["data-stat"] == "PA":
-					PA = PA + int(td.text)
-				elif td["data-stat"] == "H":
-					hits = hits + int(td.text)
-				elif td["data-stat"] == "2B":
-					two_base = two_base + int(td.text)
-				elif td["data-stat"] == "3B":
-					three_base = three_base + int(td.text)
-				elif td["data-stat"] == "3B":
-					home_runs = home_runs + int(td.text)
-				elif td["data-stat"] == "RBI":
-					RBI = RBI + int(td.text)
-				elif td["data-stat"] == "SB":
-					SB = SB + int(td.text)
-				elif td["data-stat"] == "CS":
-					CS = CS + int(td.text)
-				elif td["data-stat"] == "SH":
-					SH = SH + int(td.text)
-				elif td["data-stat"] == "SF":
-					SF = SF + int(td.text)
-				elif td["data-stat"] == "BB":
-					BB = BB + int(td.text)
-				elif td["data-stat"] == "HBP":
-					HBP = HBP + int(td.text)
-				elif td["data-stat"] == "SO":
-					SO = SO + int(td.text)
-				elif td["data-stat"] == "GIDP":
-					GDP = GDP + int(td.text)
+				if td.text != '':
+					if td["data-stat"] == "PA":
+						PA = PA + int(td.text)
+					elif td["data-stat"] == "H":
+						hits = hits + int(td.text)
+					elif td["data-stat"] == "2B":
+						two_base = two_base + int(td.text)
+					elif td["data-stat"] == "3B":
+						three_base = three_base + int(td.text)
+					elif td["data-stat"] == "HR":
+						home_runs = home_runs + int(td.text)
+					elif td["data-stat"] == "RBI":
+						RBI = RBI + int(td.text)
+					elif td["data-stat"] == "SB":
+						SB = SB + int(td.text)
+					elif td["data-stat"] == "CS":
+						CS = CS + int(td.text)
+					elif td["data-stat"] == "SH":
+						SH = SH + int(td.text)
+					elif td["data-stat"] == "SF":
+						SF = SF + int(td.text)
+					elif td["data-stat"] == "BB":
+						BB = BB + int(td.text)
+					elif td["data-stat"] == "HBP":
+						HBP = HBP + int(td.text)
+					elif td["data-stat"] == "SO":
+						SO = SO + int(td.text)
+					elif td["data-stat"] == "GIDP":
+						GDP = GDP + int(td.text)
 
-			if len(td_list) > 2:
+			if len(td_list) > 2 and td_list[2].find('a'):
+				game = int(tr.find('th').text)
 				date_str = td_list[2].find('a').text
+				team = td_list[3].text
+
 				tdatetime = datetime.strptime(date_str, '%b %d')
 				tdate = datetime(2018, tdatetime.month, tdatetime.day)
 				if tdate > date_list[datetime_index]:
-					print(tdate)
-					datetime_index = datetime_index + 1
 					single_hits = hits - two_base - three_base - home_runs
 					stats_array = [game, PA, single_hits, two_base, three_base, home_runs, RBI, SB, CS, SH, SF, BB, HBP, SO, GDP]
 					print(stats_array)
+
+					batter_stat_object = {}
+					batter_stat_object["name"] = name
+					batter_stat_object["team"] = team
+
+					batter_stat_object["Number of Game"] = game
+					batter_stat_object["PA"] = PA
+					batter_stat_object["single_hits"] = single_hits
+					batter_stat_object["two_base"] = two_base
+					batter_stat_object["three_base"] = three_base
+					batter_stat_object["home_runs"] = home_runs
+					batter_stat_object["RBI"] = RBI
+					batter_stat_object["SB"] = SB
+					batter_stat_object["CS"] = CS
+					batter_stat_object["SH"] = SH
+					batter_stat_object["SF"] = SF
+					batter_stat_object["BB"] = BB
+					batter_stat_object["HBP"] = HBP
+					batter_stat_object["SO"] = SO
+					batter_stat_object["GDP"] = GDP
+
+					batter_stat_object["vec"] = stats_array
+
+					result_object[date_list[datetime_index]] = batter_stat_object
+
+					if datetime_index < len(date_list) - 1: datetime_index = datetime_index + 1
 				# if len(td_list) > 1:
+	return result_object
 
 def main():
-	# teams = ["NYY", "TBR", "BOS", "TOR", "BAL"]
-	teams = ["NYY"]
+	teams = ["NYY", "TBR", "BOS", "TOR", "BAL"]
+	# teams = ["NYY"]
 
 	date_list = []
 	first_data = datetime(2018, 4, 1)
 	current_date = first_data
-	while current_date.month < 10:
+	while current_date < datetime(2018, 9, 15):
 		current_date = current_date + timedelta(days=14)
 		date_list.append(current_date)
 
+	result_object_array = []
 	for team in teams:
 		candidate_urls = get_batter_candidates(team)
-		get_batter_statistics(candidate_urls[0], date_list)
+		for candidate_url in candidate_urls:
+			result_object = get_batter_statistics(candidate_url, date_list)
+			if result_object and len(result_object) == len(date_list):
+				result_object_array.append(result_object)
+		# print(result_object.encode("utf-8"))
 
+	result_json_obj = {}
+	result_json_obj["time_array"] = []
+
+	for date in date_list:
+		date_obj = {}
+		date_str = date.strftime('%m/%d')
+		date_obj[date_str] = []
+		for result_object in result_object_array:
+			if date in result_object:
+				date_obj[date_str].append(result_object[date])
+
+		result_json_obj["time_array"].append(date_obj)
+
+	fw = open('out_batter.json', 'w', encoding="utf-8")
+	json.dump(result_json_obj, fw, indent=4, ensure_ascii=False)
+
+	return
 if __name__ == '__main__':
 	main()
