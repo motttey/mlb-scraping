@@ -5,11 +5,11 @@ import pandas as pd
 import requests
 
 url = "https://www.baseball-reference.com/"
-team_url = "https://www.baseball-reference.com/teams/ATL/2019.shtml"
 
-def main():
-	headers = { "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0", }
+def get_batter_candidates(team):
+	team_url = "https://www.baseball-reference.com/teams/" + team + "/2018.shtml"
 	candidate_urls = []
+	print(team_url)
 
 	req = requests.get(url=team_url, headers=headers)
 	soup = BeautifulSoup(req.content, features="html.parser")
@@ -24,8 +24,16 @@ def main():
 			print(b_stats_url)
 
 			candidate_urls.append(b_stats_url)
-	
+
 	print(len(candidate_urls))
+	return candidate_urls
+
+def main():
+	headers = { "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0", }
+	teams = ["NYY", "TBR", "BOS", "TOR", "BAL"]
+
+	for team in teams:
+		get_batter_candidates(team)
 
 if __name__ == '__main__':
 	main()
