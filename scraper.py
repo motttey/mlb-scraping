@@ -38,7 +38,10 @@ def get_batter_statistics(url, date_list):
 	soup = BeautifulSoup(req.content, features="html.parser")
 
 	datetime_index = 0
+
+	if len(soup.find_all('div', {'id' :'info'})) == 0: return;
 	name = soup.find('div', {'id' :'info'}).find('h1').text
+
 	print(name.encode("utf-8"))
 
 	result_object = {}
@@ -108,7 +111,8 @@ def get_batter_statistics(url, date_list):
 				tdate = datetime(2018, tdatetime.month, tdatetime.day)
 				if tdate > date_list[datetime_index]:
 					single_hits = hits - two_base - three_base - home_runs
-					stats_array = [game, PA, single_hits, two_base, three_base, home_runs, RBI, SB, CS, SH, SF, BB, HBP, SO, GDP]
+					# stats_array = [game, PA, single_hits, two_base, three_base, home_runs, RBI, SB, CS, SH, SF, BB, HBP, SO, GDP]
+					stats_array = [PA, RBI, single_hits, two_base, three_base, home_runs, SB, SO, BB, HBP, SF]
 					print(stats_array)
 
 					batter_stat_object = {}
@@ -140,7 +144,11 @@ def get_batter_statistics(url, date_list):
 	return result_object
 
 def main():
-	teams = ["NYY", "TBR", "BOS", "TOR", "BAL"]
+	teams = [
+	"NYY", "TBR", "BOS", "TOR", "BAL",
+	"MIN", "CLE", "CHW", "KCR", "DET",
+	"HOU", "OAK", "TEX", "LAA", "SEA"
+	]
 	# teams = ["NYY"]
 
 	date_list = []
