@@ -113,7 +113,6 @@ def get_batter_statistics(url, date_list):
 					single_hits = hits - two_base - three_base - home_runs
 					# stats_array = [game, PA, single_hits, two_base, three_base, home_runs, RBI, SB, CS, SH, SF, BB, HBP, SO, GDP]
 					stats_array = [PA, RBI, single_hits, two_base, three_base, home_runs, SB, SO, BB, HBP, SF]
-					print(stats_array)
 
 					batter_stat_object = {}
 					batter_stat_object["name"] = name
@@ -135,8 +134,12 @@ def get_batter_statistics(url, date_list):
 					batter_stat_object["SO"] = SO
 					batter_stat_object["GDP"] = GDP
 
-					batter_stat_object["vec"] = stats_array
+					if datetime_index >= 6:
+					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - BB * 2 - HBP - home_runs * 3) / (game * 3.1)
+					else:
+					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 3 - BB - two_base - home_runs * 4) / (game * 3.1)
 
+					batter_stat_object["vec"] = stats_array
 					result_object[date_list[datetime_index]] = batter_stat_object
 
 					if datetime_index < len(date_list) - 1: datetime_index = datetime_index + 1
@@ -182,7 +185,6 @@ def main():
 
 	fw = open('out_batter.json', 'w', encoding="utf-8")
 	json.dump(result_json_obj, fw, indent=4, ensure_ascii=False)
-
 	return
 if __name__ == '__main__':
 	main()
