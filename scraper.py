@@ -2,13 +2,11 @@ import json
 from bs4 import BeautifulSoup
 from datetime import datetime, date, timedelta
 from time import strptime
-
 import urllib.request
 import pandas as pd
 import requests
 
 url = "https://www.baseball-reference.com/"
-
 def get_batter_candidates(team):
 	headers = { "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0", }
 	team_url = "https://www.baseball-reference.com/teams/" + team + "/2018.shtml"
@@ -41,12 +39,11 @@ def get_batter_statistics(url, date_list):
 
 	if len(soup.find_all('div', {'id' :'info'})) == 0: return;
 	name = soup.find('div', {'id' :'info'}).find('h1').text
-
 	print(name.encode("utf-8"))
 
 	result_object = {}
-	# "試合数", "打席", "単打", "二塁打", "三塁打", "本塁打", "打点", "盗塁", "盗塁刺", "犠打", "犠飛", "四球", "死球", "三振", "併殺打"
 
+	# "試合数", "打席", "単打", "二塁打", "三塁打", "本塁打", "打点", "盗塁", "盗塁刺", "犠打", "犠飛", "四球", "死球", "三振", "併殺打"
 	game = 0
 	PA = 0
 	hits = 0
@@ -135,7 +132,7 @@ def get_batter_statistics(url, date_list):
 					batter_stat_object["GDP"] = GDP
 
 					if datetime_index >= 6:
-					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - BB * 2 - HBP - home_runs * 3) / (game * 3.1)
+					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - two_base - HBP - home_runs * 3) / (game * 3.1)
 					else:
 					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 3 - BB - two_base - home_runs * 4) / (game * 3.1)
 
@@ -143,7 +140,6 @@ def get_batter_statistics(url, date_list):
 					result_object[date_list[datetime_index]] = batter_stat_object
 
 					if datetime_index < len(date_list) - 1: datetime_index = datetime_index + 1
-				# if len(td_list) > 1:
 	return result_object
 
 def main():
@@ -152,7 +148,6 @@ def main():
 	"MIN", "CLE", "CHW", "KCR", "DET",
 	"HOU", "OAK", "TEX", "LAA", "SEA"
 	]
-	# teams = ["NYY"]
 
 	date_list = []
 	first_data = datetime(2018, 4, 1)
