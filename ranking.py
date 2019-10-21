@@ -19,7 +19,13 @@ def main():
         time_val_sorted_row20 = time_val_sorted[0:19]
 
         for player in time_val_sorted_row20:
-            print(player["name"].encode("utf-8"))
+            tb = int(player["single_hits"]) + 2* int(player["two_base"]) + 3 * int(player["three_base"]) + 4 * int(player["home_runs"])
+
+            obp_1 = int(player["single_hits"]) + int(player["two_base"]) + int(player["three_base"]) + int(player["home_runs"]) + int(player["BB"]) + int(player["HBP"])
+            obp_2 = int(player["PA"])
+            obp = obp_1/obp_2
+
+            print(str(player["name"].encode("utf-8")) + ": " + str("{:.3f}".format(player["Btype"]) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp))) )
 
         print("---")
 
@@ -27,7 +33,13 @@ def main():
         time_val_sorted_top20 = time_val_sorted[0:19]
 
         for player in time_val_sorted_top20:
-            print(player["name"].encode("utf-8"))
+            tb = int(player["single_hits"]) + 2* int(player["two_base"]) + 3 * int(player["three_base"]) + 4 * int(player["home_runs"])
+
+            obp_1 = int(player["single_hits"]) + int(player["two_base"]) + int(player["three_base"]) + int(player["home_runs"]) + int(player["BB"]) + int(player["HBP"])
+            obp_2 = int(player["PA"])
+            obp = obp_1/obp_2
+
+            print(str(player["name"].encode("utf-8")) + ": " + str("{:.3f}".format(player["Btype"]) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp))) )
 
 if __name__ == "__main__":
     main()

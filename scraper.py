@@ -59,6 +59,7 @@ def get_batter_statistics(url, date_list):
 	HBP = 0
 	SO = 0
 	GDP = 0
+	Gtm = 0
 
 	if len(soup.find_all('table', {'id' :'batting_gamelogs'})) == 0: return;
 
@@ -72,6 +73,8 @@ def get_batter_statistics(url, date_list):
 				if td.text != '':
 					if td["data-stat"] == "PA":
 						PA = PA + int(td.text)
+					elif td["data-stat"] == "team_game_num":
+						Gtm = int(td["csk"])
 					elif td["data-stat"] == "H":
 						hits = hits + int(td.text)
 					elif td["data-stat"] == "2B":
@@ -132,9 +135,9 @@ def get_batter_statistics(url, date_list):
 					batter_stat_object["GDP"] = GDP
 
 					if datetime_index >= 6:
-					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - two_base - HBP - home_runs * 3) / (game * 3.1)
+					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - two_base - HBP - home_runs * 3) / PA
 					else:
-					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 3 - BB - two_base - home_runs * 4) / (game * 3.1)
+					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 3 - BB - two_base - home_runs * 4) / (Gtm * 3.1)
 
 					batter_stat_object["vec"] = stats_array
 					result_object[date_list[datetime_index]] = batter_stat_object
