@@ -23,9 +23,9 @@ def main():
 
             obp_1 = int(player["single_hits"]) + int(player["two_base"]) + int(player["three_base"]) + int(player["home_runs"]) + int(player["BB"]) + int(player["HBP"])
             obp_2 = int(player["PA"])
-            obp = obp_1/obp_2
+            obp = obp_1/obp_2 if (player["PA"] > 0) else 0
 
-            print(str(player["name"].encode("utf-8")) + ": " + str("{:.3f}".format(player["Btype"]) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp))) )
+            print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)))
 
         print("---")
 
@@ -37,9 +37,9 @@ def main():
 
             obp_1 = int(player["single_hits"]) + int(player["two_base"]) + int(player["three_base"]) + int(player["home_runs"]) + int(player["BB"]) + int(player["HBP"])
             obp_2 = int(player["PA"])
-            obp = obp_1/obp_2
+            obp = obp_1/obp_2 if (player["PA"] > 0) else 0
 
-            print(str(player["name"].encode("utf-8")) + ": " + str("{:.3f}".format(player["Btype"]) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp))) )
+            print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)))
 
 if __name__ == "__main__":
     main()

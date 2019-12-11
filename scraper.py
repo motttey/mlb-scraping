@@ -22,7 +22,7 @@ def get_batter_candidates(team):
 		td_list = tr.find_all('td')
 		if len(td_list) > 1:
 			player_name = td_list[1]["data-append-csv"]
-			b_stats_url = "https://www.baseball-reference.com/players/gl.fcgi?id=" + player_name + "&t=b&year=2018"
+			b_stats_url = "https://www.baseball-reference.com/players/gl.fcgi?id=" + player_name + "&t=b&year=2019"
 			print(b_stats_url)
 
 			candidate_urls.append(b_stats_url)
@@ -134,10 +134,13 @@ def get_batter_statistics(url, date_list):
 					batter_stat_object["SO"] = SO
 					batter_stat_object["GDP"] = GDP
 
-					if datetime_index >= 6:
-					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - two_base - HBP - home_runs * 3) / PA
+					if PA == 0:
+						batter_stat_object["Btype"] = 0
 					else:
-					   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 3 - BB - two_base - home_runs * 4) / (Gtm * 3.1)
+						if datetime_index >= 6:
+						   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 2 - two_base - HBP - home_runs * 3) / PA
+						else:
+						   batter_stat_object["Btype"] = (single_hits * 2 + SB * 2 + three_base * 3 - BB - two_base - home_runs * 4) / (Gtm * 3.1)
 
 					batter_stat_object["vec"] = stats_array
 					result_object[date_list[datetime_index]] = batter_stat_object
