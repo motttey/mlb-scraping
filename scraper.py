@@ -9,7 +9,7 @@ import requests
 url = "https://www.baseball-reference.com/"
 def get_batter_candidates(team):
 	headers = { "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0", }
-	team_url = "https://www.baseball-reference.com/teams/" + team + "/2018.shtml"
+	team_url = "https://www.baseball-reference.com/teams/" + team + "/2019.shtml"
 	candidate_urls = []
 	print(team_url)
 
@@ -108,7 +108,7 @@ def get_batter_statistics(url, date_list):
 				team = td_list[3].text
 
 				tdatetime = datetime.strptime(date_str, '%b %d')
-				tdate = datetime(2018, tdatetime.month, tdatetime.day)
+				tdate = datetime(2019, tdatetime.month, tdatetime.day)
 				if tdate > date_list[datetime_index]:
 					single_hits = hits - two_base - three_base - home_runs
 					# stats_array = [game, PA, single_hits, two_base, three_base, home_runs, RBI, SB, CS, SH, SF, BB, HBP, SO, GDP]
@@ -156,9 +156,9 @@ def main():
 	]
 
 	date_list = []
-	first_data = datetime(2018, 4, 1)
+	first_data = datetime(2019, 4, 1)
 	current_date = first_data
-	while current_date < datetime(2018, 9, 15):
+	while current_date < datetime(2019, 9, 15):
 		current_date = current_date + timedelta(days=14)
 		date_list.append(current_date)
 
