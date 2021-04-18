@@ -4,7 +4,7 @@ import numpy as np
 import sys as sys
 import json
 
-def main():
+def get_top_low():
     f = open('out_batter.json', 'r', encoding="utf-8")
 
     jsonData = json.load(f)
@@ -42,4 +42,4 @@ def main():
             print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)))
 
 if __name__ == "__main__":
-    main()
+    get_top_low()
