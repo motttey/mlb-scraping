@@ -22,17 +22,27 @@ def get_sorted(sortKey, idx, time_array, reverse=False):
 
     return sorted(time_val, key=lambda x: x[sortKey], reverse=reverse)
 
-def print_spearman(first, second):
+
+def get_s_names(first, second):
     s_names_first = [ player['name'] for player in first ]
     s_names_second = [ player['name'] for player in second ]
+
+    return [s_names_first, s_names_second]
+
+def print_jaccard(first, second):
+    s_names_first, s_names_second = get_s_names (first, second)
+    jaccard = len(set(s_names_first) & set(s_names_second)) / len(set(s_names_first) | set(s_names_second))
+    print(jaccard)
+
+def print_spearman(first, second):
+    s_names_first, s_names_second = get_s_names (first, second)
 
     print(spearmanr(s_names_first, s_names_second))
     # print(len(set(s_names_first) & set(s_names_second)))
 
 def print_MRR(first, second):
     MRR = 0.0
-    s_names_first = [ player['name'] for player in first ]
-    s_names_second = [ player['name'] for player in second ]
+    s_names_first, s_names_second = get_s_names (first, second)
 
     for player in s_names_second:
         MRR = MRR + 1/(s_names_first.index(player) + 1)
@@ -55,13 +65,13 @@ def compare_stats(max):
         sorted_second_high = get_sorted(metric, 11, time_array, True)[0:max]
 
         print_spearman(sorted_first_high, sorted_second_high)
-        print_MRR(sorted_all_high, sorted_second_high)
+        print_jaccard(sorted_all_high, sorted_second_high)
 
         sorted_first_low = get_sorted(metric, 2, time_array, False)[0:max]
         sorted_second_low = get_sorted(metric, 11, time_array, False)[0:max]
 
         print_spearman(sorted_first_low, sorted_second_low)
-        print_MRR(sorted_all_low, sorted_second_low)
+        print_jaccard(sorted_all_low, sorted_second_low)
 
 if __name__ == "__main__":
     compare_stats(19)
