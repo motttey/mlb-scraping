@@ -25,7 +25,10 @@ def get_top_low():
             obp_2 = int(player["PA"])
             obp = obp_1/obp_2 if (player["PA"] > 0) else 0
 
-            print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)))
+            ab = player["PA"] - player["SH"] - player["SF"] - player["BB"] - player["HBP"]
+            ops = obp + tb/ab
+
+            print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)) + ", OPS: " + str("{:.3f}".format(ops)))
 
         print("---")
 
@@ -39,7 +42,10 @@ def get_top_low():
             obp_2 = int(player["PA"])
             obp = obp_1/obp_2 if (player["PA"] > 0) else 0
 
-            print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)))
+            ab = player["PA"] - player["SH"] - player["SF"] - player["BB"] - player["HBP"]
+            ops = obp + tb/ab
+
+            print(str(player["name"].encode("utf-8")) + ": Number of Game: " +  str(player["Number of Game"]) + ", Btype: "+ str("{:.3f}".format(player["Btype"])) + ", TB: " + str(tb) + ", OBP: " + str("{:.3f}".format(obp)) + ", OPS: " + str("{:.3f}".format(ops)))
 
 if __name__ == "__main__":
     get_top_low()
