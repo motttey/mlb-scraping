@@ -59,22 +59,29 @@ def visualize_density():
 
     jsonData = json.load(f)
     time_array = jsonData['time_array']
+    sorted_all_high = get_sorted("Btype", 11, time_array, True)
+
+    df = pd.DataFrame(sorted_all_high)
+
+    metrics = ["Btype", "TB", "OBP", "OPS"]
+    f, axes = plt.subplots(len(metrics), 1, figsize=(7,6))
+    plt.subplots_adjust(hspace=0.75)
+
     #  "TB", "OBP", "OPS"
-    for metric in ["Btype"]:
+    for index, metric in enumerate(metrics):
         print("---")
         print(metric)
-        sorted_all_high = get_sorted(metric, 0, time_array, True)
-        df = pd.DataFrame(sorted_all_high)
         print(df)
 
-        f, ax = plt.subplots(figsize=(7,6))
-        sns.boxplot(x=metric, data=df, whis=[0,100], width=.5, palette="vlag")
-        sns.stripplot(x=metric, data=df, size=2, color=".3", linewidth=0)
+        sns.boxplot(x=metric, data=df, whis=[0,100], width=.5, palette="vlag", ax=axes[index])
+        sns.stripplot(x=metric, data=df, size=2, color=".3", linewidth=0, ax=axes[index])
 
-        ax.xaxis.grid(True)
-        ax.set(ylabel="")
-        sns.despine(trim=True, left=True)
-        plt.show()
+        axes[index].xaxis.grid(True)
+        axes[index].set(ylabel="")
+        axes[index].set(xlabel=metric)
+        # sns.despine(trim=True, left=True)
+
+    plt.show()
     return
 
 def compare_stats(max):
