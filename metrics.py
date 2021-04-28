@@ -2,6 +2,9 @@ from __future__ import unicode_literals
 
 import numpy as np
 import json
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from scipy.stats import spearmanr, kendalltau
 from sklearn.metrics import precision_score, recall_score
@@ -51,6 +54,29 @@ def print_MRR(first, second):
     MRR = MRR/len(s_names_first)
     print(MRR)
 
+def visualize_density():
+    f = open('out_batter.json', 'r', encoding="utf-8")
+
+    jsonData = json.load(f)
+    time_array = jsonData['time_array']
+    #  "TB", "OBP", "OPS"
+    for metric in ["Btype"]:
+        print("---")
+        print(metric)
+        sorted_all_high = get_sorted(metric, 0, time_array, True)
+        df = pd.DataFrame(sorted_all_high)
+        print(df)
+
+        f, ax = plt.subplots(figsize=(7,6))
+        sns.boxplot(x=metric, data=df, whis=[0,100], width=.5, palette="vlag")
+        sns.stripplot(x=metric, data=df, size=2, color=".3", linewidth=0)
+
+        ax.xaxis.grid(True)
+        ax.set(ylabel="")
+        sns.despine(trim=True, left=True)
+        plt.show()
+    return
+
 def compare_stats(max):
     f = open('out_batter.json', 'r', encoding="utf-8")
 
@@ -83,4 +109,4 @@ def compare_stats(max):
         print_jaccard(sorted_first_low, sorted_second_low)
 
 if __name__ == "__main__":
-    compare_stats(20)
+    visualize_density()
