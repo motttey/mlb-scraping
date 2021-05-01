@@ -6,7 +6,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from scipy.stats import spearmanr, kendalltau, shapiro
+from scipy.stats import spearmanr, kendalltau, shapiro, kstest
 from sklearn.metrics import precision_score, recall_score
 
 def get_sorted(sortKey, idx, time_array, reverse=False):
@@ -59,7 +59,7 @@ def visualize_density():
 
     jsonData = json.load(f)
     time_array = jsonData['time_array']
-    sorted_all_high = get_sorted("Btype", 11, time_array, True)
+    sorted_all_high = get_sorted("Btype", 1, time_array, True)
 
     df = pd.DataFrame(sorted_all_high)
 
@@ -131,8 +131,25 @@ def shapiro_wilk_test():
         w, p = shapiro(df[metric])
         print(w)
         print(p)
+    return
 
+def kolmogorov_smirnov_test():
+    f = open('out_batter.json', 'r', encoding="utf-8")
+
+    jsonData = json.load(f)
+    time_array = jsonData['time_array']
+
+    for metric in ["Btype", "TB", "OBP", "OPS"]:
+        print("---")
+        print(metric)
+        sorted_all_high = get_sorted(metric, 11, time_array, True)
+        df = pd.DataFrame(sorted_all_high)
+
+        for cdf in ['uniform', 'norm']:
+            print(cdf)
+            res = kstest(df[metric], cdf)
+            print(res)
     return
 
 if __name__ == "__main__":
-    shapiro_wilk_test()
+    kolmogorov_smirnov_test()
