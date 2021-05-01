@@ -6,7 +6,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from scipy.stats import spearmanr, kendalltau
+from scipy.stats import spearmanr, kendalltau, shapiro
 from sklearn.metrics import precision_score, recall_score
 
 def get_sorted(sortKey, idx, time_array, reverse=False):
@@ -114,6 +114,25 @@ def compare_stats(max):
         print_MRR(sorted_all_low, sorted_first_low)
         print("jaccard")
         print_jaccard(sorted_first_low, sorted_second_low)
+    return
+
+def shapiro_wilk_test():
+    f = open('out_batter.json', 'r', encoding="utf-8")
+
+    jsonData = json.load(f)
+    time_array = jsonData['time_array']
+
+    for metric in ["Btype", "TB", "OBP", "OPS"]:
+        print("---")
+        print(metric)
+        sorted_all_high = get_sorted(metric, 11, time_array, True)
+        df = pd.DataFrame(sorted_all_high)
+
+        w, p = shapiro(df[metric])
+        print(w)
+        print(p)
+
+    return
 
 if __name__ == "__main__":
-    visualize_density()
+    shapiro_wilk_test()
