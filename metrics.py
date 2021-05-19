@@ -25,6 +25,10 @@ def get_sorted(sortKey, idx, time_array, reverse=False):
 
     return sorted(time_val, key=lambda x: x[sortKey], reverse=reverse)
 
+def get_time_array():
+    f = open('out_batter.json', 'r', encoding="utf-8")
+    jsonData = json.load(f)
+    return jsonData['time_array']
 
 def get_s_names(first, second):
     s_names_first = [ player['name'] for player in first ]
@@ -55,11 +59,7 @@ def print_MRR(first, second):
     print(MRR)
 
 def visualize_density():
-    f = open('out_batter.json', 'r', encoding="utf-8")
-
-    jsonData = json.load(f)
-    time_array = jsonData['time_array']
-    sorted_all_high = get_sorted("Btype", 1, time_array, True)
+    sorted_all_high = get_sorted("Btype", 1, get_time_array(), True)
 
     df = pd.DataFrame(sorted_all_high)
 
@@ -85,10 +85,7 @@ def visualize_density():
     return
 
 def compare_stats(max):
-    f = open('out_batter.json', 'r', encoding="utf-8")
-
-    jsonData = json.load(f)
-    time_array = jsonData['time_array']
+    time_array = get_time_array()
 
     for metric in ["Btype", "TB", "OBP", "OPS"]:
         print("---")
@@ -117,10 +114,7 @@ def compare_stats(max):
     return
 
 def shapiro_wilk_test():
-    f = open('out_batter.json', 'r', encoding="utf-8")
-
-    jsonData = json.load(f)
-    time_array = jsonData['time_array']
+    time_array = get_time_array()
 
     for metric in ["Btype", "TB", "OBP", "OPS"]:
         print("---")
@@ -134,10 +128,7 @@ def shapiro_wilk_test():
     return
 
 def kolmogorov_smirnov_test():
-    f = open('out_batter.json', 'r', encoding="utf-8")
-
-    jsonData = json.load(f)
-    time_array = jsonData['time_array']
+    time_array = get_time_array()
 
     for metric in ["Btype", "TB", "OBP", "OPS"]:
         print("---")
